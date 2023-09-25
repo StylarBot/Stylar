@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, Client, EmbedBuilder } = require('discord.js');
 const ms = require('ms');
-const reply = require('../../utils/reply');
+const reply = require('../../utils/Reply');
 
 module.exports = {
     clientPermissions: ['BanMembers', 'KickMembers', 'ModerateMembers', 'ManageMessages'],
