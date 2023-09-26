@@ -84,6 +84,20 @@ module.exports = {
             .setMaxLength(24)
             .setRequired(true)
         )
+    )
+    .addSubcommand((sub) =>
+        sub.setName('access')
+        .setDescription('Grant/revoke a user\'s access to a ticket!')
+        .addUserOption((opt) =>
+            opt.setName('user')
+            .setDescription('The user who\'s access you want to change!')
+            .setRequired(true)
+        )
+        .addStringOption((opt) =>
+            opt.setName('ticketid')
+            .setDescription('The ID of the ticket you want to add the user to!')
+            .setMaxLength(24)
+        )
     ),
 
     /**
@@ -96,6 +110,8 @@ module.exports = {
         const channel = options.getChannel('channel');
         const staff = options.getRole('staff');
         const id = options.getString('id');
+        const ticketid = options.getString('ticketid');
+        const user = options.getUser('user');
 
         const sub = options.getSubcommand();
 
@@ -442,6 +458,132 @@ module.exports = {
                         .setColor('Blue')
                         .setFooter({ text: `https://www.github.com/StylarBot` })
                     ]
+                });
+            }
+            break;
+
+            case 'access': {
+                const ticketchannel = await ticket.findOne({ Guild: guild.id, Channel: interaction.channelId });
+                if(!ticketchannel && !ticketid) throw "That channel does not have a valid ticket in it!";
+
+                const member = await guild.members.cache.get(user.id);
+                if(!member) throw "That member is not in this server.";
+
+                const channel = await guild.channels.cache.get(ticketchannel.Channel);
+                if(!channel) {
+                    reply(interaction, `Channel does not exist, deleting ticket automatically.`, `🚫`);
+                    return ticketchannel.deleteOne();
+                }
+
+                const button1 = new ButtonBuilder()
+                .setCustomId('grantaccess')
+                .setEmoji('✅')
+                .setLabel('Grant Access')
+                .setStyle(ButtonStyle.Success)
+
+                const button2 = new ButtonBuilder()
+                .setCustomId('revokeaccess')
+                .setEmoji('❌')
+                .setLabel('Revoke Access')
+                .setStyle(ButtonStyle.Danger)
+
+                const row = new ActionRowBuilder()
+                .setComponents(button1, button2)
+
+                const b = "<:seperator:1156319256858865745>";
+
+                let status;
+
+                if(ticketchannel.AllUsers.includes(member.id)) status = 'Yes';
+                else status = 'No';
+
+                const msg = await interaction.reply({
+                    embeds: [
+                        new EmbedBuilder()
+                        .setTitle(`Changing Access for ${member.user.tag}`)
+                        .setDescription(`Editing Access As ${interaction.user}\n${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}`)
+                        .addFields(
+                            { name: `Username:`, value: `<@${member.id}>` },
+                            { name: `User ID:`, value: `${member.id}` },
+                            { name: `Existing Access?`, value: `${status}` }
+                        )
+                        .setColor('Blue')
+                        .setThumbnail(member.displayAvatarURL({ size: 1024 }))
+                        .setFooter({ text: `https://github.com/StylarBot` })
+                    ], components: [row]
+                });
+
+                const collector = await msg.createMessageComponentCollector();
+
+                collector.on('collect', async(results) => {
+                    if(results.user.id !== interaction.user.id) return results.reply({ content: `This isn't your prompt!`, ephemeral: true });
+                    if(results.customId === 'grantaccess') {
+                        if(status === 'Yes') return results.reply({
+                            content: `This user already has access to this ticket!`
+                        });
+                        else {
+                            await ticketchannel.AllUsers.push(member.id);
+                            await ticketchannel.Contributors.push(member.id);
+                            ticketchannel.save();
+
+                            channel.permissionOverwrites.edit(member.id, {
+                                ViewChannel: true,
+                                SendMessages: true,
+                                AttachFiles: true,
+                                EmbedLinks: true,
+                                ReadMessageHistory: true,
+                                UseApplicationCommands: true
+                            });
+
+                            return msg.edit({
+                                embeds: [
+                                    new EmbedBuilder()
+                                    .setTitle(`Changed Access for ${member.user.tag}`)
+                                    .setDescription(`Edited Access As ${interaction.user}\n${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}`)
+                                    .setColor('Blue')
+                                    .addFields(
+                                        { name: 'Access', value: `${member.user.tag} now has access to this ticket.` }
+                                    )
+                                    .setThumbnail(member.displayAvatarURL({ size: 1024 }))
+                                    .setFooter({ text: `https://github.com/StylarBot` })
+                                ], components: []
+                            });
+                        }
+                    } else if (results.customId === 'revokeaccess') {
+                        if(status === 'No') return results.reply({
+                            content: `This user already doesn't have access to this ticket!`
+                        });
+                        else {
+                            const indexofAllUsers = ticketchannel.AllUsers.indexOf(member.id);
+                            const indexofContributors = ticketchannel.Contributors.indexOf(member.id);
+                            await ticketchannel.AllUsers.splice(indexofAllUsers, 1);
+                            await ticketchannel.Contributors.splice(indexofContributors, 1);
+                            ticketchannel.save();
+
+                            channel.permissionOverwrites.edit(member.id, {
+                                ViewChannel: false,
+                                SendMessages: false,
+                                AttachFiles: false,
+                                EmbedLinks: false,
+                                ReadMessageHistory: false,
+                                UseApplicationCommands: false
+                            });
+
+                            return msg.edit({
+                                embeds: [
+                                    new EmbedBuilder()
+                                    .setTitle(`Changed Access for ${member.user.tag}`)
+                                    .setDescription(`Edited Access As ${interaction.user}\n${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}`)
+                                    .setColor('Blue')
+                                    .addFields(
+                                        { name: 'Access', value: `${member.user.tag} no longer has access to this ticket.` }
+                                    )
+                                    .setThumbnail(member.displayAvatarURL({ size: 1024 }))
+                                    .setFooter({ text: `https://github.com/StylarBot` })
+                                ], components: []
+                            });
+                        }
+                    } else return;
                 });
             }
             break;

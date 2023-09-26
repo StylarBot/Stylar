@@ -4,7 +4,7 @@ const SortRoles = require('../../utils/SortRoles');
 const GetAllPermissions = require('../../utils/GetAllPermissions');
 const GetKeyPermissions = require('../../utils/GetKeyPermissions');
 const GetPresence = require('../../utils/GetPresence');
-const Reply = require('../../utils/Reply');
+const Reply = require('../../utils/reply');
 const CheckHasRole = require('../../utils/CheckHasRole');
 const GetGuildInfo = require('../../utils/GetGuildInfo');
 const { default: axios } = require('axios');
@@ -62,7 +62,6 @@ module.exports = {
                 { name: 'Owner Info', value: 'ownerinfo' },
                 { name: 'All Roles', value: 'allroles' },
                 { name: 'Sticker Count', value: 'stickercount' },
-                { name: 'Vanity Info', value: 'vanityinfo' },
                 { name: 'Verification Level', value: 'verificationlevel' }
             )
         )
@@ -104,11 +103,13 @@ module.exports = {
 
                         const customtext = (await axios.get(`https://stylar-dev.discordand.repl.co/api/verify/${user.id}`)).data;
 
+                        const b = '<:seperator:1156319256858865745>';
+
                         return interaction.reply({
                             embeds: [
                                 new EmbedBuilder()
                                 .setTitle(`User Info: ${presence} ${user.tag}`)
-                                .setDescription(`${badges}\n${roles}\n${customtext}`)
+                                .setDescription(`${badges}\n${customtext}\n${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}\n${roles}`)
                                 .addFields(
                                     { name: 'ID', value: `${id}`, inline: true },
                                     { name: `Full Username + Discriminator`, value: `${tag}`, inline: true },
@@ -342,7 +343,7 @@ module.exports = {
                             .addFields(
                                 { name: 'ID', value: `${guildproperties.id}`, inline: true },
                                 { name: 'Channel Count', value: `${guildproperties.channelCount}`, inline: true },
-                                { name: 'Creation Date', value: `<t:${Math.round(guild.createdTimestamp / 1000)}> (<t:${guild.createdTimestamp / 1000}:R>)` },
+                                { name: 'Creation Date', value: `<t:${Math.round(guild.createdTimestamp / 1000)}> (<t:${Math.round(guild.createdTimestamp / 1000)}:R>)` },
                                 { name: 'Description', value: `${guildproperties.description}`, inline: true },
                                 { name: 'Emoji Count', value: `${guildproperties.emojiCount}`, inline: true },
                                 { name: 'Server Boost Status', value: `${guildproperties.boostStatus}`, inline: true },
@@ -353,7 +354,6 @@ module.exports = {
                                 { name: 'Owner Info', value: `🆔 **Owner ID**: ${guildproperties.ownerID}\n👑 **Owner**: <@${guildproperties.ownerID}>`, inline: true },
                                 { name: 'Role Count', value: `${guildproperties.roleCount}`, inline: true },
                                 { name: 'Sticker Count', value: `${guildproperties.stickerCount}`, inline: true },
-                                { name: 'Vanity Info', value: `${guildproperties.vanityInfo}`, inline: true },
                                 { name: 'Verification Level', value: `${guildproperties.verificationLevel}`, inline: true },
                             )
                             .setThumbnail(guildproperties.icon)
@@ -453,19 +453,6 @@ module.exports = {
 
                         case 'stickercount': {
                             return Reply(interaction, `This server has ${guildproperties.stickerCount} stickers.`,  '👥', true);
-                        }
-                        break;
-
-                        case 'vanityinfo': {
-                            return interaction.reply({
-                                embeds: [
-                                    new EmbedBuilder()
-                                    .setTitle(`${guild.name} - Vanity Info`)
-                                    .setDescription(`${guildproperties.vanityInfo}`)
-                                    .setColor('Blue')
-                                    .setThumbnail(guildproperties.icon)
-                                ]
-                            });
                         }
                         break;
 

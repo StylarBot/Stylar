@@ -1,16 +1,7 @@
+const { ChannelType } = require('discord.js');
 module.exports = async function GetGuildInfo(guild) {
     await guild.fetchOwner();
     await guild.members.fetch();
-    await guild.fetchVanityData();
-
-    let vanityinfo;
-
-    if(!guild.vanityURLCode) {
-        vanityinfo = 'Vanity not available.';
-    }
-    else {
-        vanityinfo = `URL: ${guild.vanityURLCode}\nUses: ${guild.vanityURLUses}`
-    }
 
     let guildproperties = {
         id: guild.id,
@@ -26,7 +17,6 @@ module.exports = async function GetGuildInfo(guild) {
         ownerID: guild.ownerId || 0,
         roleCount: `${guild.roles.cache.size}`,
         stickerCount: `${guild.stickers.cache.size}`,
-        vanityInfo: `${vanityinfo}`,
         verificationLevel: `${guild.verificationLevel.toString()}`
     }
 

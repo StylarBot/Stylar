@@ -7,4 +7,5 @@ module.exports = model('tickets', new Schema({
     Contributors: Array,
     Transcript: Array,
     Active: Boolean,
+    AllUsers: Array,
 }))

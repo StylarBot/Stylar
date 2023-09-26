@@ -1,5 +1,5 @@
 const { ChatInputCommandInteraction, Client, InteractionType } = require('discord.js');
-const reply = require('../../utils/reply');
+const reply = require('../../utils/Reply');
 
 module.exports = {
     name: 'interactionCreate',

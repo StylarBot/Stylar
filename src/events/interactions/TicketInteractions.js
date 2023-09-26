@@ -1,7 +1,7 @@
 const { ButtonInteraction, Client, EmbedBuilder, ChannelType, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
 const ticket = require('../../models/Ticket');
 const ticketsystem = require('../../models/TicketSystem');
-const reply = require('../../utils/reply');
+const reply = require('../../utils/Reply');
 
 module.exports = {
     name: 'interactionCreate',
@@ -75,6 +75,7 @@ module.exports = {
                     Contributors: [contributors.join('\n')],
                     Transcript: [],
                     User: interaction.user.id,
+                    AllUsers: [client.user.id, interaction.user.id, contributors.join(", ")]
                 });
 
                 await interaction.reply({
