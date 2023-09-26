@@ -102,17 +102,23 @@ module.exports = {
                         const discordms2 = Math.round(joinedTimestamp / 1000);
 
                         let customtext;
-                        const developers = [
-                            '983163377243271291',
-                            '1117933631512518716'
-                        ]
-                        if(developers.includes(member.id)) customtext === "**Verified Stylar Developer**";
-                        else customtext === "";
+                        const developers = ['983163377243271291', '1117933631512518716'];
+                        const testers = ['983163377243271291', '1117933631512518716', '1005460072274595960'];
+
+                        if(developers.includes(user.id) && testers.includes(user.id)) {
+                            customtext = "**Verified Stylar Developer & Tester <:stylar:1156061363660140555>**"
+                        } else if (developers.includes(user.id)) {
+                            customtext = "**Verified Stylar Developer <:stylarred:1156061667155771463>**"
+                        } else if (testers.includes(user.id)) {
+                            customtext = "**Verified Stylar Tester <:stylargreen:1156061684025274471>**"
+                        } else {
+                            customtext = "";
+                        }
 
                         return interaction.reply({
                             embeds: [
                                 new EmbedBuilder()
-                                .setTitle(`* User Info: ${presence} ${user.tag}`)
+                                .setTitle(`User Info: ${presence} ${user.tag}`)
                                 .setDescription(`${badges}\n${roles}\n${customtext}`)
                                 .addFields(
                                     { name: 'ID', value: `${id}`, inline: true },
@@ -121,7 +127,7 @@ module.exports = {
                                     { name: `Moderation Protection Status`, value: `Bannable: **${bannable}**\nKickable: **${kickable}**\nModeratable: **${moderatable}**`, inline: true },
                                     { name: 'Joined Date', value: `<t:${discordms2}> (<t:${discordms2}:R>)`, inline: true },
                                     { name: `Voice Status`, value: `${voiceStatus}`, inline: true },
-                                    { name: `Key Permissions`, value: `${keyPermissions.join(', ') || "No key permissions."}` }
+                                    { name: `* Key Permissions`, value: `${keyPermissions.join(', ') || "No key permissions."}` }
                                 )
                                 .setFooter({ text: `* ℹ️ To see all permissions that this user has, do /info user allpermissions` })
                                 .setThumbnail(user.displayAvatarURL({ size: 1024 }))

@@ -11,7 +11,7 @@ const {
 
 const ticket = require('../../models/Ticket');
 const ticketsystem = require('../../models/TicketSystem');
-const reply = require('../../utils/reply');
+const reply = require('../../utils/Reply');
 const splitter = require('../../utils/splitter');
 const pages = require('../../utils/Pagination');
 
@@ -391,7 +391,7 @@ module.exports = {
                 if(!validticketsystems || validticketsystems.length <= 0) throw "There are no ticket systems setup in the server.";
 
                 const msg = await interaction.reply({
-                    content: `\`\`\`⚠️ Are you sure you want to remove the ticket system from this channel?\nTickets will no longer be able to be opened from this channel.\`\`\``,
+                    content: `\`\`\`⚠️ Are you sure you want to remove the ticket system from this server?\nTickets will no longer be able to be opened.\`\`\``,
                     components: [row],
                     ephemeral: true
                 });
@@ -404,7 +404,7 @@ module.exports = {
                     if(results.customId === 'confirm') {
                         await ticketsystem.deleteMany({ Guild: guild.id });
                         await msg.edit({
-                            content: `\`\`\`✅ All **${validticketsystems.length}** ticket system(s) disabled in the server.\`\`\``,
+                            content: `\`\`\`✅ All ${validticketsystems.length} ticket system(s) disabled in the server.\`\`\``,
                             components: [],
                         });
                     } else {
