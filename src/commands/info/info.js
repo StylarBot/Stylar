@@ -7,6 +7,7 @@ const GetPresence = require('../../utils/GetPresence');
 const Reply = require('../../utils/Reply');
 const CheckHasRole = require('../../utils/CheckHasRole');
 const GetGuildInfo = require('../../utils/GetGuildInfo');
+const { default: axios } = require('axios');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -101,19 +102,7 @@ module.exports = {
                         const discordms = Math.round(createdTimestamp / 1000);
                         const discordms2 = Math.round(joinedTimestamp / 1000);
 
-                        let customtext;
-                        const developers = ['983163377243271291', '1117933631512518716'];
-                        const testers = ['983163377243271291', '1117933631512518716', '1005460072274595960'];
-
-                        if(developers.includes(user.id) && testers.includes(user.id)) {
-                            customtext = "**Verified Stylar Developer & Tester <:stylar:1156061363660140555>**"
-                        } else if (developers.includes(user.id)) {
-                            customtext = "**Verified Stylar Developer <:stylarred:1156061667155771463>**"
-                        } else if (testers.includes(user.id)) {
-                            customtext = "**Verified Stylar Tester <:stylargreen:1156061684025274471>**"
-                        } else {
-                            customtext = "";
-                        }
+                        const customtext = (await axios.get(`https://stylar-dev.discordand.repl.co/api/verify/${user.id}`)).data;
 
                         return interaction.reply({
                             embeds: [
