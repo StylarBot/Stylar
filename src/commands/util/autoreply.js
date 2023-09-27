@@ -64,7 +64,7 @@ module.exports = {
                         .setColor('Blue')
                         .addFields(
                             { name: 'Phrase (trigger)', value: `"${phrase}"` },
-                            { name: 'Response', value: `${repli}` },
+                            { name: 'Response', value: `"${repli}"` },
                             { name: 'Added By', value: `<@${interaction.user.id}>` }
                         )
                         .setThumbnail(guild.iconURL({ size: 1024 }))
@@ -86,7 +86,7 @@ module.exports = {
                         .setColor('Blue')
                         .addFields(
                             { name: 'Phrase (trigger)', value: `"${phrase}"` },
-                            { name: 'Response', value: `${repli}` },
+                            { name: 'Response', value: `"${repli}"` },
                             { name: 'Removed By', value: `<@${interaction.user.id}>` }
                         )
                         .setThumbnail(guild.iconURL({ size: 1024 }))
@@ -128,6 +128,14 @@ module.exports = {
                 collector.on('collect', async(results) => {
                     if(results.user.id !== interaction.user.id) return results.reply({ content: `This is not your prompt!`, ephemeral: true });
                     if(results.customId === 'confirm') {
+                        let phrases = [];
+                        let replies = [];
+
+                        allreplies.forEach((autoreply) => {
+                            phrases.push(`"${autoreply.Phrase}"`);
+                            replies.push(`"${autoreply.Reply}"`);
+                        });
+
                         await autoreply.deleteMany({ Guild: guild.id });
 
                         return msg.edit({
@@ -137,8 +145,8 @@ module.exports = {
                                 .setDescription('All autoreplies have been removed from the server.')
                                 .setColor('Blue')
                                 .addFields(
-                                    { name: 'Phrase (trigger)', value: `"${phrase}"` },
-                                    { name: 'Response', value: `${repli}` },
+                                    { name: 'Phrase (trigger)', value: `${phrases.join(', ')}` },
+                                    { name: 'Response', value: `${replies.join(', ')}` },
                                     { name: 'Removed By', value: `<@${interaction.user.id}>` }
                                 )
                                 .setThumbnail(guild.iconURL({ size: 1024 }))
