@@ -146,7 +146,7 @@ module.exports = {
                 return;
             }
 
-            validticket.Active === false;
+            validticket.Active = false;
             validticket.save();
 
             return interaction.reply({

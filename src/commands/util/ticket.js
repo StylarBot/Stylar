@@ -311,7 +311,7 @@ module.exports = {
 
                 const channel = await guild.channels.cache.get(validticket.Channel);
                 if(!channel) {
-                    validticket.Active === false;
+                    validticket.Active = false;
                     validticket.save();
                     throw "That channel was not found. Ticket closing automatically.";
                 }

@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits, Client, EmbedBuilder } = require('discord.js');
 const ms = require('ms');
 const reply = require('../../utils/Reply');
+const punishment = require('../../models/Moderation');
 
 module.exports = {
     clientPermissions: ['BanMembers', 'KickMembers', 'ModerateMembers', 'ManageMessages'],
@@ -37,6 +38,21 @@ module.exports = {
         .addStringOption((opt) =>
             opt.setName('reason')
             .setDescription('The reason for banning the user.')
+            .setMaxLength(1024)
+        )
+    )
+    .addSubcommand((sub) =>
+        sub.setName('warn')
+        .setDescription('Warn a user!')
+        .addUserOption((opt) =>
+            opt.setName('user')
+            .setDescription('The user you want to warn!')
+            .setRequired(true)
+        )
+        .addStringOption((opt) =>
+            opt.setName('reason')
+            .setDescription('The reason for warning the user!')
+            .setRequired(true)
             .setMaxLength(1024)
         )
     ),
@@ -91,6 +107,18 @@ module.exports = {
 
                     return reply(interaction, `${member.user.tag} has successfully been banned.\nBanned by: ${interaction.user.tag}`, `✅`);
                 } else {
+                    const date = new Date();
+                    const datetimems = date.getTime();
+
+                    await punishment.create({
+                        Guild: guild.id,
+                        DateTimeMS: datetimems,
+                        Moderator: interaction.user.id,
+                        Punishment: 'Ban',
+                        Reason: reason,
+                        User: member.id
+                    });
+
                     await member.ban({
                         reason: reason,
                     });
@@ -121,11 +149,60 @@ module.exports = {
                 throw "That member has a higher role position than you, I cannot kick them.";
 
                 if(!member.kickable) throw "That member is not kickable by me. This may be because they are the server owner.";
+                
+                const date = new Date();
+                const datetimems = date.getTime();
+
+                await punishment.create({
+                    Guild: guild.id,
+                    DateTimeMS: datetimems,
+                    Moderator: interaction.user.id,
+                    Punishment: 'Kick',
+                    Reason: reason,
+                    User: member.id
+                });
+                
                 await member.kick({
                     reason: reason,
                 });
 
                 return reply(interaction, `${member.user.tag} has successfully been kicked.\nKicked by: ${interaction.user.tag}`, `✅`);
+            }
+            break;
+
+            case 'warn': {
+                const member = await guild.members.cache.get(user.id);
+                if(!member) throw "That member is not in this server.";
+
+                if(member.id === interaction.user.id) throw "You can\'t warn yourself.";
+
+                if(member.roles.highest.position >= clientMember.roles.highest.position) {
+                    return interaction.reply({
+                        embeds: [
+                            new EmbedBuilder()
+                            .setTitle(`🚫 Stylar Error - Role Position`)
+                            .setDescription(`The member selected has a higher role position than me.\n<@${member.id}>'s highest position: <@&${member.roles.highest.id}>\nMy highest position: <@&${clientMember.roles.highest.id}>`)
+                            .setColor('Red')
+                        ], ephemeral: true
+                    });
+                }
+
+                if(member.roles.highest.position >= interaction.member.roles.highest.position)
+                throw "That member has a higher role position than you, I cannot warn them.";
+                
+                const date = new Date();
+                const datetimems = date.getTime();
+
+                await punishment.create({
+                    Guild: guild.id,
+                    DateTimeMS: datetimems,
+                    Moderator: interaction.user.id,
+                    Punishment: 'Warn',
+                    Reason: reason,
+                    User: member.id
+                });
+
+                return reply(interaction, `${member.user.tag} has successfully been warned.\nWarned by: ${interaction.user.tag}`, `✅`);
             }
             break;
         }
