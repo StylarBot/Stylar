@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
+const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, PermissionFlagsBits } = require('discord.js');
 const autoreply = require('../../models/Autoreply');
 const reply = require('../../utils/reply');
 
@@ -6,6 +6,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName('autoreply')
     .setDescription('Setup an autoreply function in your server!')
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels)
     .addSubcommand((sub) =>
         sub.setName('add')
         .setDescription('Add an autoreply!')

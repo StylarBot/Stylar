@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, Client, ChannelType } = require('discord.js');
+const { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder, ButtonBuilder, ButtonStyle, ActionRowBuilder, Client, ChannelType, PermissionFlagsBits } = require('discord.js');
 const ga = require('../../models/GlobalAnnouncements');
 const { default: axios } = require('axios');
 
@@ -6,6 +6,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName('globalannouncements')
     .setDescription('Configure Stylar\'s global announcements!')
+    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
     .addSubcommand((sub) =>
         sub.setName('setchannel')
         .setDescription('Set the channel you want Stylar\'s global announcements to be sent to!')

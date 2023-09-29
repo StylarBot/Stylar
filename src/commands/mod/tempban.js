@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ChatInputCommandInteraction } = require('discord.js');
+const { SlashCommandBuilder, ChatInputCommandInteraction, PermissionFlagsBits } = require('discord.js');
 const tempban = require('../../models/Tempban');
 const ms = require('ms');
 
@@ -6,6 +6,7 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName('tempban')
     .setDescription('Temporarily ban a user from the server!')
+    .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
     .addUserOption((opt) =>
         opt.setName('user')
         .setDescription('The user you want to tempban!')

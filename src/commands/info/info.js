@@ -109,7 +109,7 @@ module.exports = {
                             embeds: [
                                 new EmbedBuilder()
                                 .setTitle(`User Info: ${presence} ${user.tag}`)
-                                .setDescription(`${badges}\n${verificationstatus}\n${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}\n${roles}`)
+                                .setDescription(`${badges}\n${verificationstatus}\n<@${user.id}>\n${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}${b}\n${roles}`)
                                 .addFields(
                                     { name: 'ID', value: `${id}`, inline: true },
                                     { name: `Full Username + Discriminator`, value: `${tag}`, inline: true },
