@@ -1,7 +1,7 @@
 const { ButtonInteraction, Client, EmbedBuilder, ChannelType, ButtonBuilder, ButtonStyle, ActionRowBuilder } = require('discord.js');
 const ticket = require('../../models/Ticket');
 const ticketsystem = require('../../models/TicketSystem');
-const reply = require('../../utils/Reply');
+const reply = require('../../utils/reply');
 
 module.exports = {
     name: 'interactionCreate',
@@ -96,6 +96,15 @@ module.exports = {
 
                 const row = new ActionRowBuilder()
                 .setComponents(button1)
+
+                const button2 = new ButtonBuilder()
+                .setCustomId('deletech')
+                .setEmoji('🗑️')
+                .setLabel('Delete Ticket Channel')
+                .setStyle(ButtonStyle.Danger)
+
+                const row2 = new ActionRowBuilder()
+                .setComponents(button2)
                 
                 const message = await ticketchannel.send({
                     embeds: [
@@ -120,13 +129,21 @@ module.exports = {
         
                         await validticket.deleteOne();
         
-                        return results.reply({
+                        const mes = await results.reply({
                             embeds: [
                                 new EmbedBuilder()
                                 .setTitle(`Ticket Successfully Closed`)
                                 .setDescription(`This ticket has successfully been closed.\nClosed by: ${interaction.user}.`)
                                 .setColor('Blue')
-                            ]
+                            ], components: [row2]
+                        });
+
+                        const collector = await mes.createMessageComponentCollector();
+
+                        collector.on('collect', async(results) => {
+                            if(results.customId === 'deletech') {
+                                await results.channel.delete();
+                            } else return;
                         });
                     } else return;
                 });
