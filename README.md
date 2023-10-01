@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://i.imgur.com/4LW9K0H.png" alt="StylarLogo" width="224" height="224" style="margin-bottom: 25px;" />
+<img src="https://i.imgur.com/pxr57q2.png" alt="StylarLogo" width="224" height="224" style="margin-bottom: 25px;" />
 
 # Stylar Team™️
 
