@@ -2,36 +2,11 @@
 
 <img src="https://i.imgur.com/pxr57q2.png" alt="StylarLogo" width="224" height="224" style="margin-bottom: 25px;" />
 
-# Stylar Team™️
+# Stylar has moved!
 
-Your server, your choices: Stylar™️
+🛑 Notice: The JS version of Stylar has and will no longer be recieving updates regularly. We will instead switch to [Typescript](https://github.com/StylarBot/Stylar-TS) version of Stylar which is 10x easier for us to manage, code, and much more. It will be now recieving more frequant updates and new features whilst the OG Stylar will be retiring. Thank you for the support, and enjoy something more clear and easier to read and update with us!
 
-<a href="https://www.javascript.com/"><img alt="Javascript" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3.1.2/assets/cozy/built-with/javascript_vector.svg"></a>
-<a href="https://discord.com"><img alt="Discord Server" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-plural_vector.svg"></a>
+*-* **Stylar™️ Creators**
+
 <a href="https://www.typescript.com/"><img alt="Typescript" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3.1.2/assets/cozy/built-with/typescript_vector.svg"></a>
 
-## 🤔 Why?
-
-### Easy to use
-
-Designed to be easy for less advanced users! These shouldn't be hard, so we try and ease the things to make your experience up to your imagination.
-
-### Free and open source
-
-Anyone can view, and send changes which will be reviewed by the team. Aditionally, you can see proof that we don't have any malware in our bot.
-
-### Active development
-
-Suggested features are always being considered and sometimes added.
-
-### Need assistance with changes?
-
-Our developer team, @benjisqt & @heyitsleo should be able to help you make Stylar an true open-sourced bot.
-
-## 🚀 Heard enough?
-
-Start using Stylar™️ over MEE6 today, by clicking [here.](https://discord.com/api/oauth2/authorize?client_id=1147168520732422287&permissions=28032714141399&scope=bot%20applications.commands)
-
-
-
-**-** *original readme by @heyitsleo for HybrProxy*
